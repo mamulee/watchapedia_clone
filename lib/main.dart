@@ -132,6 +132,8 @@ class BookTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BookService bookService = context.read<BookService>();
+
     return ListTile(
       onTap: () {},
       leading: Image.network(
@@ -147,8 +149,15 @@ class BookTile extends StatelessWidget {
         style: TextStyle(color: Colors.grey),
       ),
       trailing: IconButton(
-        onPressed: () {},
-        icon: Icon(Icons.star_border),
+        onPressed: () {
+          bookService.toggleLikeBook(book: book);
+        },
+        icon: bookService.likedBookList.map((book) => book.id).contains(book.id)
+            ? Icon(
+                Icons.star,
+                color: Colors.amber,
+              )
+            : Icon(Icons.star_border),
       ),
     );
   }
