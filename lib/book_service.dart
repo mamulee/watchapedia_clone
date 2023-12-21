@@ -1,9 +1,16 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:watchapedia_clone/main.dart';
 
 import 'book.dart';
 
 class BookService extends ChangeNotifier {
+  BookService() {
+    loadLikedBookList();
+  }
+
   List<Book> bookList = []; // 책 목록
   List<Book> likedBookList = []; // 좋아요 한 책 목록
 
@@ -15,6 +22,7 @@ class BookService extends ChangeNotifier {
       likedBookList.add(book);
     }
     notifyListeners();
+    saveLikedBookList();
   }
 
   void search(String q) async {
@@ -41,5 +49,25 @@ class BookService extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  saveLikedBookList() {
+    List likedBookJsonList =
+        likedBookList.map((book) => book.toJson()).toList();
+
+    String jsonString = jsonEncode(likedBookJsonList);
+
+    prefs.setString('likedBookList', jsonString);
+  }
+
+  loadLikedBookList() {
+    String? jsonString = prefs.getString('likedBookList');
+
+    if (jsonString == null) return;
+
+    List likedBookJsonList = jsonDecode(jsonString);
+
+    likedBookList =
+        likedBookJsonList.map((json) => Book.fromJson(json)).toList();
   }
 }
