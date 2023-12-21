@@ -136,7 +136,16 @@ class BookTile extends StatelessWidget {
     BookService bookService = context.read<BookService>();
 
     return ListTile(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WebViewPage(
+              url: book.previewLink.replaceFirst("http", "https"),
+            ),
+          ),
+        );
+      },
       leading: Image.network(
         book.thumbnail,
         fit: BoxFit.fitHeight,
